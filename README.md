@@ -16,19 +16,19 @@ In this tutorial, we will build a simple Android app that allows users to store 
 
 1. Open Android Studio and create new Android project and name it “SharedPreferencesExample”. Make sure to save the package name somewhere on your computer since you will need it in a later stage of this tutorial. Click next.
 
-<img style="margin:10px;" src="https://github.com/rebaz88/AndV/blob/master/Pictures/image1.png" alt="Image">
+<img style="margin:10px;" src="https://github.com/rebaz88/AndV/blob/master/pictures/image1.png" alt="Image">
 
 2. Set the minimum SDK to 14, or whatever your default is, and then click on next.
 
-<img style="margin:10px;" src="https://github.com/rebaz88/AndV/blob/master/Pictures/image2.png" alt="Image">
+<img style="margin:10px;" src="https://github.com/rebaz88/AndV/blob/master/pictures/image2.png" alt="Image">
 
 3. Select Empty Activity, click on next and then finish to start the project  
 
-<img style="margin:10px;" src="https://github.com/rebaz88/AndV/blob/master/Pictures/image3.png" alt="Image">
+<img style="margin:10px;" src="https://github.com/rebaz88/AndV/blob/master/pictures/image3.png" alt="Image">
 
 4. Open the activity_main.xml file, which can be found under app/res/layout/. You may need to wait for few seconds for the build and file indexing to complete.
 
-<img style="margin:10px;" src="https://github.com/rebaz88/AndV/blob/master/Pictures/image4.png" alt="Image">
+<img style="margin:10px;" src="https://github.com/rebaz88/AndV/blob/master/pictures/image4.png" alt="Image">
 
 5. Delete the “Hello World” TextView by selecting the TextView and then press the delete button on your keyboard.
 6. Add two Text Fields (EditTexts) and one Button to the layout by simply dragging them from the palette block on the left side to the app layout. Note, you can see the names of all elements in the layout on the down left side under the “Component Tree” section.  
@@ -52,7 +52,7 @@ Change the following properties for the Button from the properties panel on righ
 
 Once you have completed step 6, your app layout should look like the following image.
 
-<img style="margin:10px;" src="https://github.com/rebaz88/AndV/blob/master/Pictures/image5.png" alt="Image">
+<img style="margin:10px;" src="https://github.com/rebaz88/AndV/blob/master/pictures/image5.png" alt="Image">
 
 7. Copy and paste the code below to the MainActivity.java file which can be found under “app/java/your_package_name /”. Make sure that your package name is written correctly at the top of the file.
 
@@ -121,12 +121,12 @@ public class MainActivity extends AppCompatActivity {
 
 8. Run the app by clicking on the run button at the top and then select your virtual device and click on OK to run the app. It will take a little while for the virtual device to start and for the app to run.  The following image shows how you can start the virtual device and run the app.
 
-<img style="margin:10px;" src="https://github.com/rebaz88/AndV/blob/master/Pictures/image6.png" alt="Image">
+<img style="margin:10px;" src="https://github.com/rebaz88/AndV/blob/master/pictures/image6.png" alt="Image">
 
 
 9. Once the app has run, enter a username and a password and then click on the store button as shown in the following image.
 
-<img style="margin:10px;" src="https://github.com/rebaz88/AndV/blob/master/Pictures/image7.png" alt="Image">
+<img style="margin:10px;" src="https://github.com/rebaz88/AndV/blob/master/pictures/image7.png" alt="Image">
 
 
 ### Steps to Read the App Data
@@ -141,7 +141,7 @@ To read the data which you just stored into the app, you first need to make sure
 
 Once you have executed the commends above you will be able to read the data which you stored using the app as shown the following image.
 
-<img style="margin:10px;" src="https://github.com/rebaz88/AndV/blob/master/Pictures/image8.png" alt="Image">
+<img style="margin:10px;" src="https://github.com/rebaz88/AndV/blob/master/pictures/image8.png" alt="Image">
 
 
 ### Conclusion
@@ -262,4 +262,4 @@ To read the app data again and make sure that they encrypt it, we first need to 
 
 This time you will notice that the data has encrypted and it’s no longer readable as shown in the image below.
 
-<img style="margin:10px;" src="https://github.com/rebaz88/AndV/blob/master/Pictures/image9.png" alt="Image">
+<img style="margin:10px;" src="https://github.com/rebaz88/AndV/blob/master/pictures/image9.png" alt="Image">
