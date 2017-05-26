@@ -16,7 +16,7 @@ In this tutorial, we will build a simple Android app that allows users to store 
 
 1. Open Android Studio and create new Android project and name it “SharedPreferencesExample”. Make sure to save the package name somewhere on your computer since you will need it in a later stage of this tutorial. Click next.
 
-<img style="margin:10px;" src="https://github.com/rebaz88/AndV/blob/master/pictures/image1.png" alt="Image">
+<img style="margin:10px;" src="pictures/image1.png" alt="Image">
 
 2. Set the minimum SDK to 14, or whatever your default is, and then click on next.
 
