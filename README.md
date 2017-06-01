@@ -11,11 +11,11 @@ The security weakness here is that hackers could possibly circumvent login and n
 ## Activity Instructions
 
 We will illustrate the problem by creating an app and exploiting it ourselves.
-
-1. Create an app that asks the user to enter a username and password. Upon correct entry of login credentials, the user will be redirected to the second page to change their password.
-2. Show how an attacker might access the activity to change the user password without login.
-3. Explain techniques we might use to defend ourselves. 
-
+<ol type="i">
+<li>Create an app that asks the user to enter a username and password. Upon correct entry of login credentials, the user will be redirected to the second page to change their password.</li>
+<li>Show how an attacker might access the activity to change the user password without login.</li>
+<li>Explain techniques we might use to defend ourselves. </li>
+</ol>
 ### 1. Project Creation
 
 Follow the screens below to create a new project:
