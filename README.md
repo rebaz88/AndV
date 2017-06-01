@@ -280,7 +280,7 @@ To fix this problem, we will send the key associated with the value over the int
 
 The onCreate method of the MainActivity class is very like the one we see in the previous part. The only thing that has changed is the highlighted line: we include a key-value pair with the intent we are passing to the startActivity function. 
 
-```java
+```diff
 @Override
 protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -319,7 +319,7 @@ protected void onCreate(Bundle savedInstanceState) {
 ```diff
 + 		intent.putExtra("key", 3433);
 ```
-```java
+```diff
                 startActivity(intent);
             } else {
                 Toast.makeText(MainActivity.this,
