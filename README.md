@@ -340,9 +340,9 @@ protected void onCreate(Bundle savedInstanceState) {
     Bundle b = getIntent().getExtras();
 ```
 ```diff
-    int key = b.getInt("key");
-    if (key != 3433)
-        finish();
++   int key = b.getInt("key");
++   if (key != 3433)
++       finish();
 ```
 ```java
 }
