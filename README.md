@@ -260,7 +260,6 @@ We shall see for ourselves how we can view the login credentials.
 	cd Library/Android/sdk/platform-tools   
 	On Windows:   
 	cd C:\Users\YOUR_USERNAME_HERE\AppData\Local\Android\sdk\platform-tools
-
     	<li>From here, it doesn’t matter what platform you are running this on. We simply needed to find the Android/sdk/platform-tools directory.</li>
 	./adb shell
 	<li>am start –n package_name/.ActivityName</li>
