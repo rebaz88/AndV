@@ -352,6 +352,8 @@ protected void onCreate(Bundle savedInstanceState) {
 
 <img style="margin:10px;" src="https://github.com/dan7800/VulnerableAndroidAppOracle/blob/master/Pictures/ActivityAccess/image11.png" alt="Image">
 
+
+<img style="margin:10px;" src="https://github.com/dan7800/VulnerableAndroidAppOracle/blob/master/Pictures/ActivityAccess/image12.png" alt="Image">
 As we can see, an attacker would no longer be able to access the “change password” screen without the key-value pair.
 
 
