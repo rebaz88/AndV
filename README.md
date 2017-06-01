@@ -265,11 +265,9 @@ We shall see for ourselves how we can view the login credentials.
 	<li>am start –n package_name/.ActivityName</li>
     </ol>
     <li>Once you have executed the commands above, you will be sent to the activity that is supposed to be after login only. We will be able to change the password without login.</li>
-    
+    </ol>
     <img style="margin:10px;" src="https://github.com/dan7800/VulnerableAndroidAppOracle/blob/master/Pictures/ActivityAccess/image9.png" alt="Image">
-    
     <img style="margin:10px;" src="https://github.com/dan7800/VulnerableAndroidAppOracle/blob/master/Pictures/ActivityAccess/image10.png" alt="Image">
-</ol>
 
 ## Defense
 
