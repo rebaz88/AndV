@@ -30,13 +30,13 @@ Follow the screens below to create a new project:
 
 <img style="margin:10px;" src="https://github.com/dan7800/VulnerableAndroidAppOracle/blob/master/Pictures/ActivityAccess/image4.png" alt="Image">
 
-### Add an Activity
+### 2. Add an Activity
 
 Add a new activity called “Main2Activity.java” by clicking on “ActivityMain.java”, found under “app/java/package_name_here/MainActivity” as shown in the image below
 
 <img style="margin:10px;" src="https://github.com/dan7800/VulnerableAndroidAppOracle/blob/master/Pictures/ActivityAccess/image5.png" alt="Image">
 
-### Construct user interface
+### 3. Construct user interface
 
 a. Open activity_main.xml and clear all and paste the following code
 
@@ -149,7 +149,7 @@ The second activity should look like this
 
 <img style="margin:10px;" src="https://github.com/dan7800/VulnerableAndroidAppOracle/blob/master/Pictures/ActivityAccess/image7.png" alt="Image">
 
-### Code 
+### 4. Code 
 
 Open MainActivity.java, found under “app/java/your_package_name”, and add the following code:
 
@@ -241,7 +241,100 @@ The above code achieves the following:
     <li>Sets the content view to be the layout we designed for the second activity.</li>
     <li>Grabs the bundle that came with the Intent.</li>
 </ol>
-	
+
+## Exploitation Instructions
+
+We shall see for ourselves how we can view the login credentials.
+
+1. Run the app. Enter the login credentials of “admin” for username and “admin” for password (demonstration purposes only).
+
+<img style="margin:10px;" src="https://github.com/dan7800/VulnerableAndroidAppOracle/blob/master/Pictures/ActivityAccess/image8.png" alt="Image">
+
+2. Using adb shell, view the saved preferences file by: 
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<ol type="a">
+    <li>Open Terminal or Command Prompt</li>
+    <li>Run the following commands.</li>
+    <ol type="i">
+    	<li>On Mac OS X:</li>
+	cd Library/Android/sdk/platform-tools   
+	On Windows:   
+	cd C:\Users\YOUR_USERNAME_HERE\AppData\Local\Android\sdk\platform-tools
+
+    	<li>From here, it doesn’t matter what platform you are running this on. We simply needed to find the Android/sdk/platform-tools directory.</li>
+	./adb shell
+	<li>am start –n package_name/.ActivityName</li>
+    </ol>
+    <li>Once you have executed the commands above, you will be sent to the activity that is supposed to be after login only. We will be able to change the password without login.</li>
+    
+    <img style="margin:10px;" src="https://github.com/dan7800/VulnerableAndroidAppOracle/blob/master/Pictures/ActivityAccess/image9.png" alt="Image">
+    
+    <img style="margin:10px;" src="https://github.com/dan7800/VulnerableAndroidAppOracle/blob/master/Pictures/ActivityAccess/image10.png" alt="Image">
+</ol>
+
+## Defense
+
+To fix this problem, we will send the key associated with the value over the intent to change password activity. In the second activity, we will then read the key and make sure the value is correct. If it is correct, we can start the password-changing activity. Otherwise, we will dismiss the activity. Then, when we run the “am” command without the key to open Main2Activity, it will not open. 
+
+### 1. Code
+
+The onCreate method of the MainActivity class is very like the one we see in the previous part. The only thing that has changed is the highlighted line: we include a key-value pair with the intent we are passing to the startActivity function. 
+
+```java
+@Override
+protected void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    setContentView(R.layout.activity_main);
+
+    // username and password hardcoded for testing purpose
+    final String USERNAME = "admin";
+    final String PASSWORD = "admin";
+
+
+    // initialize  user name  instance with the real input in xml
+    final EditText etUsername = (EditText) findViewById(R.id.etUsername);
+
+    // initialize  password  instance with the real input in xml
+    final EditText etPassword = (EditText) findViewById(R.id.etPassword);
+
+    // initialize login button instance
+    final Button btnLogin = (Button) findViewById(R.id.btnLogin);
+    btnLogin.setOnClickListener(new View.OnClickListener() {
+        public void onClick(View v) {
+
+            // collect user's username input
+            String username = etUsername.getText().toString();
+
+            // collect user's password input
+            String password = etPassword.getText().toString();
+
+            // compare values
+            if (USERNAME.equals(username) && PASSWORD.equals(password)) {
+                Toast.makeText(MainActivity.this,
+                        "You are logged in successfully",
+                        Toast.LENGTH_LONG).show();
+
+                Intent intent = new Intent(getApplicationContext(), Main2Activity.class);
+		```
+		```diff
+                intent.putExtra("key", 3433);
+		```
+		```java
+                startActivity(intent);
+            } else {
+                Toast.makeText(MainActivity.this,
+                        "Invalid credentials",
+                        Toast.LENGTH_LONG).show();
+            }
+        }
+    });
+    
+}
+```
+
+
+
+
 
 
 
