@@ -1,391 +1,248 @@
-# Android and JavaScript
+# Activities Access
 
 ### Background
 
-Android has a tool named WebView allowing users to visit websites and view other content on the web. This web content normally consists of some HTML, CSS and JavaScript that are rendered in WebView. Android allows developers to enable or disable running JavaScript in WebView for security purposes. As JavaScript is client side, Android Allows JavaScript to read and write data to and from the device. For example, we could have JavaScript display an alert or open a new activity on the Android device. This means that anyone could view the source code of a web page that has Android JavaScript, get access to the script and use this script (in another website) to access data on the device.
+Android activity navigation is quite like how Internet navigation works. In web-based applications, many pages are public. For example, we could access many pages by adding its name after the domain name, like so: http://host/home.html.  In Android, we could do the same thing -- we could navigate to any activity using “am” package commands. 
 
-Today we will investigate how sending and receiving sensitive data using JavaScript is not secure.   
-We will build an app that sends sensitive data like the user’s phone number to the server, and then demonstrate how a hacker’s app can read and get access to this data.
+This could be quite the security problem. There are certain activities whose access should be restricted. Take a bank app that has two activities: the first activity for login and the second activity for making transactions the user must login to do transactions. 
 
-### Creating HTML file
+The security weakness here is that hackers could possibly circumvent login and navigate to the restricted-access activities by using “am” package commands. 
 
-Open new file names News.html 
+## Activity Instructions
 
-<img style="margin:10px;" src="https://github.com/dan7800/VulnerableAndroidAppOracle/blob/master/Pictures/AndroidJavascript/image1.png" alt="Image">
+We will illustrate the problem by creating an app and exploiting it ourselves.
 
-The website should look like this. Then you can use any local webserver to serve the file or
-If you do not want to test it with a local server you can browse this url https://goo.gl/TIGDOb .   
-The output should look like the image below
+1. Create an app that asks the user to enter a username and password. Upon correct entry of login credentials, the user will be redirected to the second page to change their password.
+2. Show how an attacker might access the activity to change the user password without login.
+3. Explain techniques we might use to defend ourselves. 
 
-<img style="margin:10px;" src="https://github.com/dan7800/VulnerableAndroidAppOracle/blob/master/Pictures/AndroidJavascript/image2.png" alt="Image">
+### 1. Project Creation
 
-### Steps to build the News View App
+Follow the screens below to create a new project:
+  
+  <img style="margin:10px;" src="https://github.com/dan7800/VulnerableAndroidAppOracle/blob/master/Pictures/ActivityAccess/image1.png" alt="Image">
+  
+  Name the project “Insecure Activity Access”.
+  
+<img style="margin:10px;" src="https://github.com/dan7800/VulnerableAndroidAppOracle/blob/master/Pictures/ActivityAccess/image2.png" alt="Image">
 
-1. Open new project with name “AndroidJavaScript”, save the package name will will need next
+<img style="margin:10px;" src="https://github.com/dan7800/VulnerableAndroidAppOracle/blob/master/Pictures/ActivityAccess/image3.png" alt="Image">
 
-<img style="margin:10px;" src="https://github.com/dan7800/VulnerableAndroidAppOracle/blob/master/Pictures/AndroidJavascript/image3.png" alt="Image">
+<img style="margin:10px;" src="https://github.com/dan7800/VulnerableAndroidAppOracle/blob/master/Pictures/ActivityAccess/image4.png" alt="Image">
 
-2. Paste the following code to activity_main.xml
+### Add an Activity
 
-```xml
+Add a new activity called “Main2Activity.java” by clicking on “ActivityMain.java”, found under “app/java/package_name_here/MainActivity” as shown in the image below
 
+<img style="margin:10px;" src="https://github.com/dan7800/VulnerableAndroidAppOracle/blob/master/Pictures/ActivityAccess/image5.png" alt="Image">
+
+### Construct user interface
+
+a. Open activity_main.xml and clear all and paste the following code
+
+```xml 
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
+    android:layout_marginTop="30dp"
+    android:layout_marginLeft="20dp"
+    android:layout_marginRight="20dp"
     tools:context=".MainActivity">
 
     <LinearLayout
+        android:layout_width="328dp"
+        android:layout_height="495dp"
+        android:layout_weight="1"
         android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        tools:layout_editor_absoluteX="8dp"
+        tools:layout_editor_absoluteY="8dp">
 
-        <LinearLayout
+        <EditText
+            android:id="@+id/etUsername"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:ems="10"
+            android:hint="Username"
+            android:inputType="textPersonName" />
 
-            <TextView
-                android:id="@+id/textView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="0"
-                android:text="URL:"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:textSize="12dp" />
-
-            <EditText
-                android:id="@+id/etURL"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="https://goo.gl/TIGDOb"
-                android:textSize="12dp" />
-
-            <Button
-                android:id="@+id/buGo"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="0"
-                android:text="Go" />
-
-        </LinearLayout>
-
-        <LinearLayout
+        <EditText
+            android:id="@+id/etPassword"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal">
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:ems="10"
+            android:hint="Password"
+            android:inputType="textPassword" />
 
-            <WebView
-                android:id="@+id/wvURL"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentTop="true"
-                android:layout_weight="0" />
-        </LinearLayout>
-
+        <Button
+            android:id="@+id/btnLogin"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:layout_width="133dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="Login" />
     </LinearLayout>
-</RelativeLayout>
 
-
+</android.support.constraint.ConstraintLayout>
 ```
+This is what the layout should look like:
+<img style="margin:10px;" src="https://github.com/dan7800/VulnerableAndroidAppOracle/blob/master/Pictures/ActivityAccess/image6.png" alt="Image">
 
-The result should look like this 
-
-<img style="margin:10px;" src="https://github.com/dan7800/VulnerableAndroidAppOracle/blob/master/Pictures/AndroidJavascript/image4.png" alt="Image">
-
-
-3. Add permission in AndroidManinfest.xml files to access to network and user phone number
+b. Construct the layout for the second activity by pasting the following to activity_main2.xml
 
 ```xml
+    <?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginTop="30dp"
+    android:layout_marginLeft="20dp"
+    android:layout_marginRight="20dp"
+    tools:context=".Main2Activity">
 
-<uses-permission android:name="android.permission.INTERNET" />
-<uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+    <LinearLayout
+        android:layout_width="328dp"
+        android:layout_height="495dp"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        tools:layout_editor_absoluteX="8dp"
+        tools:layout_editor_absoluteY="8dp"
+        android:weightSum="1">
 
+        <EditText
+            android:id="@+id/etUsername"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="New Password"
+            android:inputType="textPassword" />
+
+        <EditText
+            android:id="@+id/etPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:ems="10"
+            android:hint="Repeat Password"
+            android:inputType="textPassword" />
+
+        <Button
+            android:id="@+id/btnLogin"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:layout_width="180dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="Update Password"
+            android:layout_weight="0.01" />
+    </LinearLayout>
+
+</android.support.constraint.ConstraintLayout>
 
 ```
 
-4. The code will be like this code
+The second activity should look like this
+
+<img style="margin:10px;" src="https://github.com/dan7800/VulnerableAndroidAppOracle/blob/master/Pictures/ActivityAccess/image7.png" alt="Image">
+
+### Code 
+
+Open MainActivity.java, found under “app/java/your_package_name”, and add the following code:
 
 ```java
-public class MainActivity extends AppCompatActivity {
-
-    EditText etURL; //navigation url
-    WebView browser; // web browser
-
-    @Override
+@Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        etURL = (EditText) findViewById(R.id.etURL);
-        browser = (WebView) findViewById(R.id.wvURL);
+        // username and password hardcoded for testing purpose
+        final String USERNAME = "admin";
+        final String PASSWORD = "admin";
 
-        //Enable Javascript
-        browser.getSettings().setJavaScriptEnabled(true);
 
-        //Inject WebAppInterface methods into Web page by having Interface name 'Android'
-        browser.addJavascriptInterface(new WebAppInterface(), "Android");
+        // initialize  user name  instance with the real input in xml
+        final EditText etUsername = (EditText) findViewById(R.id.etUsername);
 
-        browser.setWebViewClient(new WebViewClient() {
+        // initialize  password  instance with the real input in xml
+        final EditText etPassword = (EditText) findViewById(R.id.etPassword);
 
-            @Override
-            public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                view.loadUrl(url);
-                return true;
-            }
-
-        });
-
-        // button that click to go to url
-        Button buClick = (Button) findViewById(R.id.buGo);
-
-        //  event to navigate to website
-        buClick.setOnClickListener(new View.OnClickListener() {
-            @Override
+        // initialize login button instance
+        final Button btnLogin = (Button) findViewById(R.id.btnLogin);
+        btnLogin.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                //check if the API>=23 to display runtime request permission
-                if ((int) Build.VERSION.SDK_INT >= 23) {
 
-                    // check if this permission is not grated yet
-                    if (ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.READ_PHONE_STATE) !=
-                            PackageManager.PERMISSION_GRANTED) {
+                // collect user's username input
+                String username = etUsername.getText().toString();
 
-                        //shouldShowRequestPermissionRationale(). This method returns true
-                        // if the app has requested this permission previously and the user denied the request.
-                        if (!shouldShowRequestPermissionRationale(Manifest.permission.READ_PHONE_STATE)) {
+                // collect user's password input
+                String password = etPassword.getText().toString();
 
-                            // display request permission
-                            requestPermissions(new String[]{Manifest.permission.READ_PHONE_STATE},
-                                    REQUEST_CODE_ASK_PERMISSIONS);
-                            return;
+                // compare values
+                if (USERNAME.equals(username) && PASSWORD.equals(password)) {
+                    Toast.makeText(MainActivity.this,
+                            "You are logged in successfully",
+                            Toast.LENGTH_LONG).show();
 
-                        }
-
-                        return;
-                    }
+                    Intent intent = new Intent(getApplicationContext(), Main2Activity.class);
+                    startActivity(intent);
+                } else {
+                    Toast.makeText(MainActivity.this,
+                            "Invalid credentials",
+                            Toast.LENGTH_LONG).show();
                 }
-
-                //load the url that written in edittext to the webview
-                LoadURL();
             }
         });
-    }
 
-    //Class to be injected in Web page
-    public class WebAppInterface {
-
-        //This method return user phone number to the javascript calls from website
-        @JavascriptInterface   // must be added for API 17 or higher
-        public String GetPhoneNumber() {
-            return GetUserPhoneNumber();// "585-444-3234";
-        }
 
     }
-
-    /* this method is getting
-    user phone number from his device
-    */
-    String GetUserPhoneNumber() {
-        TelephonyManager tMgr = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
-        String mPhoneNumber = tMgr.getLine1Number();
-        return mPhoneNumber;
-    }
-
-    void LoadURL() {
-
-        //load the url that written in edittext to the webview
-        browser.loadUrl(etURL.getText().toString());
-    }
-
-    //get access to mailbox
-    final private int REQUEST_CODE_ASK_PERMISSIONS = 123;
-
-    //request permsion result
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        switch (requestCode) {
-
-            case REQUEST_CODE_ASK_PERMISSIONS:
-
-                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-
-                    // load the url data
-                    LoadURL();
-
-                } else {
-                    // Permission Denied
-
-                }
-                break;
-            default:
-                super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        }
-    }
-}
-
 ```
-View the page content
-
-<img style="margin:10px;" src="https://github.com/dan7800/VulnerableAndroidAppOracle/blob/master/Pictures/AndroidJavascript/image5.png" alt="Image">
-
-### Steps to build the hacker app
-
-Another website can embed the same permissions included in your website’s script to gain access to user’s data on the device.
-
-1. A hacker could inspect your website’s code and see that you are using Android function in your script
-
-<img style="margin:10px;" src="https://github.com/dan7800/VulnerableAndroidAppOracle/blob/master/Pictures/AndroidJavascript/image6.png" alt="Image">
-
-2. Hacker will insert same JavaScript in his website. When your users view this website, he will get user’s personal information through your app’s permissions
-
-<img style="margin:10px;" src="https://github.com/dan7800/VulnerableAndroidAppOracle/blob/master/Pictures/AndroidJavascript/image7.png" alt="Image">
-
-### Example of the user view hacker website, and the hacker get his phone number
-
-If you do not want to run local server you can use this url https://bitly.com/2sfdX0v as the hacker url.
-
-<img style="margin:10px;" src="https://github.com/dan7800/VulnerableAndroidAppOracle/blob/master/Pictures/AndroidJavascript/image8.png" alt="Image">
-
-### Fix This Problem
-
-To fix this problem, we must send sensitive data only to the websites that we wish to authorize to access this data like our websites, or we could enable JavaScript to be run only in our website. The code below allows for sending sensitive data only to the websites that we authorize. Change the hotingURL if you are using a local server.
+Add the following imports to the file, below the package declaration.
 
 ```java
-public class MainActivity extends AppCompatActivity {
-
-    EditText etURL; //navigation url
-    WebView browser; // web browser
-
-    // host name
-    String HostingURL = "https://goo.gl/TIGDOb";
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-
-        etURL = (EditText) findViewById(R.id.etURL);
-        browser = (WebView) findViewById(R.id.wvURL);
-
-        //Enable Javascript
-        browser.getSettings().setJavaScriptEnabled(true);
-
-        //Inject WebAppInterface methods into Web page by having Interface name 'Android'
-        browser.addJavascriptInterface(new WebAppInterface(), "Android");
-
-        browser.setWebViewClient(new WebViewClient() {
-
-            @Override
-            public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                view.loadUrl(url);
-                return true;
-            }
-
-        });
-
-        // button that click to go to url
-        Button buClick = (Button) findViewById(R.id.buGo);
-
-        //  event to navigate to website
-        buClick.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //check if the API>=23 to display runtime request permission
-                if ((int) Build.VERSION.SDK_INT >= 23) {
-
-                    // check if this permission is not grated yet
-                    if (ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.READ_PHONE_STATE) !=
-                            PackageManager.PERMISSION_GRANTED) {
-
-                        //shouldShowRequestPermissionRationale(). This method returns true
-                        // if the app has requested this permission previously and the user denied the request.
-                        if (!shouldShowRequestPermissionRationale(Manifest.permission.READ_PHONE_STATE)) {
-
-                            // display request permission
-                            requestPermissions(new String[]{Manifest.permission.READ_PHONE_STATE},
-                                    REQUEST_CODE_ASK_PERMISSIONS);
-                            return;
-
-                        }
-
-                        return;
-                    }
-                }
-
-                //load the url that written in edittext to the webview
-                LoadURL();
-            }
-        });
-    }
-
-    //Class to be injected in Web page
-    public class WebAppInterface {
-
-        //This method return user phone number to the javascript calls from website
-        @JavascriptInterface   // must be added for API 17 or higher
-        public String GetPhoneNumber() {
-
-            // only send the phone to authorize website
-            if(etURL.getText().toString().indexOf(HostingURL)==0)
-                return GetUserPhoneNumber();
-
-            else
-                return  null;
-
-        }
-
-    }
-
-    /* this method is getting
-    user phone number from his device
-    */
-    String GetUserPhoneNumber() {
-        TelephonyManager tMgr = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
-        String mPhoneNumber = tMgr.getLine1Number();
-        return mPhoneNumber;
-    }
-
-    void LoadURL() {
-
-        //load the url that written in edittext to the webview
-        browser.loadUrl(etURL.getText().toString());
-    }
-
-    //get access to mailbox
-    final private int REQUEST_CODE_ASK_PERMISSIONS = 123;
-
-    //request permsion result
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        switch (requestCode) {
-
-            case REQUEST_CODE_ASK_PERMISSIONS:
-
-                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-
-                    // load the url data
-                    LoadURL();
-
-                } else {
-                    // Permission Denied
-
-                }
-                break;
-            default:
-                super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        }
-    }
-}
-
+import android.content.Intent;
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
 ```
-As we see our website could access to phone number while hacker website cannot.
+Open Main2Activity.java, and add the following code:
 
-<img style="margin:10px;" src="https://github.com/dan7800/VulnerableAndroidAppOracle/blob/master/Pictures/AndroidJavascript/image9.png" alt="Image">
+```java
+@Override
+protected void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    setContentView(R.layout.activity_main2);
+
+    Bundle b = getIntent().getExtras();
+}
+```
+
+The above code achieves the following:
+1. Upon creation of the MainActivity class, the onCreate method executes.
+<ol type="a">
+    <li>Passes the Bundle named savedInstanceState to the superclass AppCompatActivity</li>
+    <li>Initializes the variables declared in the first part with their corresponding layout objects.</li>
+    <li>Creates a listener for the login button that upon click, will:</li>
+    <ol type="i">
+        <li>Compare the credentials entered to the strings we have saved. If the credentials match what we have, we create an Intent with the second activity.</li>
+        <li>Start the second activity.</li>
+    </ol>
+</ol>
+
+2. Upon creation of the Main2Activity class, the onCreate method executes.
+a.	Passes the Bundle named savedInstanceState to the superclass AppCompatActivity
+b.	Sets the content view to be the layout we designed for the second activity.
+c.	Grabs the bundle that came with the Intent.
+
+
+
+
+
+
+
