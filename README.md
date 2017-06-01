@@ -315,11 +315,11 @@ protected void onCreate(Bundle savedInstanceState) {
                         Toast.LENGTH_LONG).show();
 
                 Intent intent = new Intent(getApplicationContext(), Main2Activity.class);
-		```
-		```diff
-                intent.putExtra("key", 3433);
-		```
-		```java
+```
+```diff
++ 		intent.putExtra("key", 3433);
+```
+```java
                 startActivity(intent);
             } else {
                 Toast.makeText(MainActivity.this,
