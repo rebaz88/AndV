@@ -280,7 +280,7 @@ To fix this problem, we will send the key associated with the value over the int
 
 The onCreate method of the MainActivity class is very like the one we see in the previous part. The only thing that has changed is the highlighted line: we include a key-value pair with the intent we are passing to the startActivity function. 
 
-```diff
+```java
 @Override
 protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -319,7 +319,7 @@ protected void onCreate(Bundle savedInstanceState) {
 ```diff
 + 		intent.putExtra("key", 3433);
 ```
-```diff
+```java
                 startActivity(intent);
             } else {
                 Toast.makeText(MainActivity.this,
@@ -332,6 +332,26 @@ protected void onCreate(Bundle savedInstanceState) {
 }
 ```
 
+Now, we change the onCreate method of the Main2Activity class to check the intent it is passed for the key-value pair. If it is incorrect, or non-existent, then the Main2Activity class will simply not start.
+
+```java
+@Override
+protected void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    setContentView(R.layout.activity_main2);
+
+    Bundle b = getIntent().getExtras();
+
+    int key = b.getInt("key");
+    if (key != 3433)
+        finish();
+}
+```
+### 2. When we run the same commands in adb again, we will get the following screens:
+
+<img style="margin:10px;" src="https://github.com/dan7800/VulnerableAndroidAppOracle/blob/master/Pictures/ActivityAccess/image11.png" alt="Image">
+
+As we can see, an attacker would no longer be able to access the “change password” screen without the key-value pair.
 
 
 
