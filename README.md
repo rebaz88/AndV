@@ -16,6 +16,7 @@ We will illustrate the problem by creating an app and exploiting it ourselves.
 <li>Show how an attacker might access the activity to change the user password without login.</li>
 <li>Explain techniques we might use to defend ourselves. </li>
 </ol>
+
 ### 1. Project Creation
 
 Follow the screens below to create a new project:
