@@ -338,10 +338,13 @@ protected void onCreate(Bundle savedInstanceState) {
     setContentView(R.layout.activity_main2);
 
     Bundle b = getIntent().getExtras();
-
+```
+```diff
     int key = b.getInt("key");
     if (key != 3433)
         finish();
+```
+```java
 }
 ```
 ### 2. When we run the same commands in adb again, we will get the following screens:
