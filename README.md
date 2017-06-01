@@ -225,7 +225,7 @@ protected void onCreate(Bundle savedInstanceState) {
 
 The above code achieves the following:
 1. Upon creation of the MainActivity class, the onCreate method executes.
-<ol type="a">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<ol type="a">
     <li>Passes the Bundle named savedInstanceState to the superclass AppCompatActivity</li>
     <li>Initializes the variables declared in the first part with their corresponding layout objects.</li>
     <li>Creates a listener for the login button that upon click, will:</li>
@@ -236,9 +236,12 @@ The above code achieves the following:
 </ol>
 
 2. Upon creation of the Main2Activity class, the onCreate method executes.
-a.	Passes the Bundle named savedInstanceState to the superclass AppCompatActivity
-b.	Sets the content view to be the layout we designed for the second activity.
-c.	Grabs the bundle that came with the Intent.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<ol type="a">
+    <li>Passes the Bundle named savedInstanceState to the superclass AppCompatActivity</li>
+    <li>Sets the content view to be the layout we designed for the second activity.</li>
+    <li>Grabs the bundle that came with the Intent.</li>
+</ol>
+	
 
 
 
